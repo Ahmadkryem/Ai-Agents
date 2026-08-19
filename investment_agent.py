@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from agno.agent import Agent
+from agno.models.groq import Groq
 from agno.models.google import Gemini
 from agno.models.openai import OpenAIChat
 from agno.os import AgentOS
@@ -9,12 +10,18 @@ from agno.tools.yfinance import YFinanceTools
 
 load_dotenv()
 
-MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "openai").lower()
+MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "groq").lower()
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL")
 
 
 def build_model():
+    if MODEL_PROVIDER == "groq":
+        if not os.getenv("GROQ_API_KEY"):
+            raise RuntimeError("GROQ_API_KEY is required when MODEL_PROVIDER=groq")
+        return Groq(id=GROQ_MODEL)
+
     if MODEL_PROVIDER == "openai":
         if not os.getenv("OPENAI_API_KEY"):
             raise RuntimeError("OPENAI_API_KEY is required when MODEL_PROVIDER=openai")
@@ -30,7 +37,7 @@ def build_model():
             )
         return Gemini(id=GEMINI_MODEL)
 
-    raise ValueError("MODEL_PROVIDER must be either 'openai' or 'gemini'")
+    raise ValueError("MODEL_PROVIDER must be 'groq', 'openai', or 'gemini'")
 
 
 agent = Agent(
