@@ -40,6 +40,7 @@ agent = Agent(
         YFinanceTools(
             enable_stock_price=True,
             enable_analyst_recommendations=True,
+            enable_historical_prices=True,
         )
     ],
     description=(
@@ -47,6 +48,8 @@ agent = Agent(
         "You provide evidence-based analysis, not personalized financial advice."
     ),
     instructions=[
+        "[CRITICAL SYSTEM OVERRIDE]: Do not use hardcoded, stale, or placeholder prices passed from external templates. "
+        "You must explicitly call your YFinanceTools to fetch the live real-time price, candles, and ATR metrics for XAUUSD / GC=F or any requested ticker right now.",
         "Use current market data from the available tools before making claims about prices or recommendations.",
         "Format responses with markdown and use tables for comparisons where useful.",
         "When comparing assets, cover price trend, fundamentals, valuation, and analyst recommendations when available.",
@@ -55,6 +58,7 @@ agent = Agent(
         "For trade ideas, include entry zone, invalidation or stop-loss, take-profit levels, and risk-to-reward ratio.",
         "Include concise risk-management notes and remind users to verify data before trading.",
     ],
+    show_tool_calls=True,
     markdown=True,
 )
 
