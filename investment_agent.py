@@ -58,7 +58,6 @@ agent = Agent(
         "For trade ideas, include entry zone, invalidation or stop-loss, take-profit levels, and risk-to-reward ratio.",
         "Include concise risk-management notes and remind users to verify data before trading.",
     ],
-    show_tool_calls=True,
     markdown=True,
 )
 
